@@ -1,62 +1,9 @@
-<?php
-
-require_once 'include/nav.php';
-
-// Inclure le fichier de connexion à la base de données
-require_once 'config/db.php';
-
-// Inclure le fichier de la classe UserModel
-require_once 'models/UserModel.php';
-
-// Inclure le fichier de la classe AuthController
-require_once 'controllers/AuthController.php';
-
-// Créer une instance de la classe AuthController
-$authController = new AuthController();
-
-// Gérer la soumission du formulaire
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['signup'])) {
-        $name = $_POST['name'];
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-        $confirmPassword = $_POST['confirmpassword'];
-
-        // Valider le mot de passe et le mot de passe de confirmation
-        if ($password === $confirmPassword) {
-            // Créer une instance de la classe UserModel
-            $user = new UserModel($name, $email, password_hash($password, PASSWORD_DEFAULT));
-
-            // Inscrire l'utilisateur
-            $result = $authController->signup($user);
-
-            if ($result) {
-                // Rediriger vers la page de login si l'inscription réussit
-                header('Location: login.php');
-                exit();
-            } else {
-                echo "Une erreur s'est produite lors de l'inscription.";
-            }
-        } else {
-            echo "Le mot de passe et le mot de passe de confirmation ne correspondent pas.";
-        }
-    } elseif (isset($_POST['login'])) {
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-
-        // Valider l'authentification
-        $result = $authController->login($email, $password);
-
-        if ($result) {
-            // Rediriger vers la page principale si l'authentification réussit
-            header('Location: index.php');
-            exit();
-        } else {
-            echo "Identifiants incorrects. Veuillez réessayer.";
-        }
-    }
-}
-
+<?php 
+require_once '../autoload.php';
+ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['submit'] == 'submit'){
+  $controller = new AuthController;
+  $controller->registration();
+ }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -69,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 
+<?php require_once 'include/nav.php'?>
 
   <section class="h-100 p-5 gradient-form" style="background-color: #eee; padding-bottom: 20px;">
     <div class="container py-5 h-100">
@@ -89,27 +37,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <p>Sign up for free</p>
   
                     <div class="form-outline mb-4">
-                      <input type="name" id="form2Example11" class="form-control"
+                      <input type="name" name="name" id="form2Example11" class="form-control"
                         placeholder="Enter ur Name" />
                       <label class="form-label" for="form2Example11">UserName</label>
                     </div>
 
                     <div class="form-outline mb-4">
-                        <input type="email" id="form2Example11" class="form-control"
+                        <input type="email" name="email" id="form2Example11" class="form-control"
                           placeholder="Enter ur email address" />
                         <label class="form-label" for="form2Example11">Email</label>
                       </div>
   
                     <div class="form-outline mb-4">
-                      <input type="password" id="form2Example22" class="form-control" />
+                      <input type="password" name="password" id="form2Example22" class="form-control" />
                       <label class="form-label" for="form2Example22">Password</label>
                     </div>
                     
-                    <div class="form-outline mb-4">
+                    <!-- <div class="form-outline mb-4">
                         <input type="confirmpassword" id="form2Example22" class="form-control" />
                         <label class="form-label" for="form2Example22">Confirm Password</label>
-                      </div>
-
+                      </div> -->
+                      <div class="text-center pt-1 mb-5 pb-1">
+                    <button class="btn-click btn-block fa-lg gradient-custom-2 mb-3 px-5 py-3" type="submit" name="submit" value="submit">Sign-Up</button>
+                  </div>
   
                     <div class="d-flex align-items-center justify-content-center pb-4">
                       <p class="mb-0 me-2">Already have an account?</p>

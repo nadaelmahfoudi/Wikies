@@ -1,4 +1,10 @@
-
+<?php 
+require_once '../autoload.php';
+ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+  $controller = new AuthController;
+  $controller->loginUser();
+ }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,57 +15,8 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
-    <!-- Container wrapper -->
-    <div class="container">
-      <!-- Navbar brand -->
-      <a class="navbar-brand me-2" href="https://mdbgo.com/">
-        <img
-          src="images/logo.png"
-          height="16"
-          alt="MDB Logo"
-          loading="lazy"
-          style="margin-top: -1px;"
-        />
-      </a>
-  
-      <!-- Toggle button -->
-      <button
-        data-mdb-collapse-init
-        class="navbar-toggler"
-        type="button"
-        data-mdb-target="#navbarButtonsExample"
-        aria-controls="navbarButtonsExample"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <i class="fas fa-bars"></i>
-      </button>
-  
-      <!-- Collapsible wrapper -->
-      <div class="collapse navbar-collapse" id="navbarButtonsExample">
-        <!-- Left links -->
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link" href="#">Dashboard</a>
-          </li>
-        </ul>
-        <!-- Left links -->
-  
-        <div class="d-flex align-items-center">
-          <button data-mdb-ripple-init type="button" class="btn btn-link px-3 me-2">
-            Login
-          </button>
-          <button data-mdb-ripple-init type="button" class="btn btn-primary me-3">
-            Sign up for free
-          </button>
+<?php require_once 'include/nav.php'?>
 
-        </div>
-      </div>
-      <!-- Collapsible wrapper -->
-    </div>
-    <!-- Container wrapper -->
-  </nav>
   <section class="h-100 gradient-form" style="background-color: #eee;">
     <div class="container py-5 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
@@ -75,27 +32,29 @@
                     <h4 class="mt-1 mb-5 pb-1">We are The WIKI plateforme</h4>
                   </div>
   
-                  <form>
+                  <form method="POST">
                     <p>Please login to your account</p>
   
                     <div class="form-outline mb-4">
-                      <input type="email" id="form2Example11" class="form-control"
+                      <input type="email" name="email" id="form2Example11" class="form-control"
                         placeholder="Phone number or email address" />
                       <label class="form-label" for="form2Example11">Email</label>
                     </div>
   
                     <div class="form-outline mb-4">
-                      <input type="password" id="form2Example22" class="form-control" />
+                      <input type="password" name="password" id="form2Example22" class="form-control" />
                       <label class="form-label" for="form2Example22">Password</label>
                     </div>
   
-
+                    <div class="text-center pt-1 mb-5 pb-1">
+                    <button class="btn-click btn-block fa-lg gradient-custom-2 mb-3 px-5 py-3" type="submit" name="submit" value="submit">Sign-Up</button>
+                  </div>
   
                     <div class="d-flex align-items-center justify-content-center pb-4">
                       <p class="mb-0 me-2">Don't have an account?</p>
                       <button type="button" class="btn btn-outline-danger">Create new</button>
                     </div>
-  
+
                   </form>
   
                 </div>
