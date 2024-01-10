@@ -16,14 +16,17 @@
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav ms-lg-5 me-lg-auto">
                             <li class="nav-item">
-                                <a class="nav-link click-scroll" href="#section_1">Home</a>
+                                <a class="nav-link click-scroll" href="index.php">Home</a>
                             </li>
-
+                            <?php 
+                            session_start();
+                            if (isset($_SESSION['roleUser']) && $_SESSION['roleUser'] == 'admin'):
+                            ?>
                             <li class="nav-item">
                                 <a class="nav-link click-scroll" href="Dashboard.php">Dashboard</a>
                             </li>
 
-
+                            <?php endif;?>
                             <li class="nav-item">
                                 <a class="nav-link click-scroll" href="#section_4">FAQs</a>
                             </li>
@@ -39,16 +42,26 @@
                                 </ul>
                             </li>
                         </ul>
-
+                        <?php
+                            if (!isset($_SESSION['nameUser'])):
+                        ?>
                         <div class="d-flex align-items-center">
                             <button data-mdb-ripple-init type="button" class="btn btn-link px-3 me-2">
                               <a href="login.php">Login</a>
                             </button>
                             <button data-mdb-ripple-init type="button" class="btn btn-primary me-3">
                               <a href="sign-up.php">Sign up for free</a>
-                            </button>
-                  
+                            </button>                 
                           </div>
+                        <?php else: ?>
+                        <p class="dark:text-white" >Welcome ! <?php echo $_SESSION['nameUser']; ?></p>
+                        <a href="logout.php" data-mdb-ripple-init type="button" class="btn btn-link px-3 me-2">
+                                <span>
+                                    Log out 
+                                </span>
+                                </a>
+                        <?php endif; ?>
+   
                         <!-- <div class="d-none d-lg-block">
                             <a href="#top" class="navbar-icon bi-person smoothscroll"></a>
                         </div> -->

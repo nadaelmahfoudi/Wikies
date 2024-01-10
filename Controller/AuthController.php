@@ -1,4 +1,5 @@
 <?php 
+session_start();
 
 class AuthController extends Controller
 {
@@ -23,15 +24,18 @@ class AuthController extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             extract($_POST);
-            $userlog = $this->user->selectUser($email)[0];
-            if ($userlog !== null) { // Check if $userlog is not null 
-                if (password_verify($password, $userlog['password'])) {
-        
-                    $_SESSION['idUser'] = $userlog['id'];
-                    $_SESSION['roleUser'] = $userlog['role'];
-                    $_SESSION['emailUser'] = $userlog['email'];
-                    $_SESSION['nameUser'] = $userlog["name"];
-
+            $userlog = $this->user->selectUser($email);
+    
+            if (!empty($userlog)) { // Check if $userlog is not empty 
+                $firstUser = $userlog[0]; // Get the first user from the array
+    
+                if (password_verify($password, $firstUser['password'])) {
+    
+                    $_SESSION['idUser'] = $firstUser['id'];
+                    $_SESSION['roleUser'] = $firstUser['role'];
+                    $_SESSION['emailUser'] = $firstUser['email'];
+                    $_SESSION['nameUser'] = $firstUser["name"];
+    
                     if ($_SESSION['roleUser'] == 'admin') {
                         header("location: Dashboard.php" );
                         exit(); 
@@ -40,12 +44,11 @@ class AuthController extends Controller
                         header("location: index.php");
                         exit(); // finish the script after redirection
                     }
-                
+                }
             }
         }
-        // 
-        }
     }
+    
 
     
 
