@@ -1,10 +1,8 @@
 <?php
 
-
-
 // use PDO;
 // use PDOException;
-
+require_once "Database.php";
 class Model 
 {
 
@@ -83,8 +81,6 @@ class Model
         try {
             $sql = "UPDATE $table SET " . implode(',', $args) . " WHERE id = ?";
 
-            $this->logQuery($sql);
-
             $stmt = $this->pdo->prepare($sql);
 
             if (!$stmt) {
@@ -106,7 +102,6 @@ class Model
             $stmt->execute();
             return true;
         } catch (PDOException $e) {
-            $this->logError($e);
             return false;
         }
     }
@@ -115,7 +110,6 @@ class Model
         try {
             // Use prepared statements to prevent SQL injection
             $sql = "DELETE FROM $table WHERE id = ?";
-            $this->logQuery($sql);
             $stmt = $this->pdo->prepare($sql);
 
 
@@ -127,10 +121,10 @@ class Model
             $stmt->execute();
             return true;
         } catch (PDOException $e) {
-            $this->logError($e);
             return false;
         }
     }
-
-
 }
+
+
+
