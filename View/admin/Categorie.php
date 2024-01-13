@@ -1,12 +1,4 @@
-<?php
-include '../../Model/CategorieModel.php';
 
-// Create an instance of CategorieModel
-$categorieModel = new CategorieModel();
-
-// Fetch categories from the database
-$categories = $categorieModel->selectRecords('categorie');
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,7 +9,7 @@ $categories = $categorieModel->selectRecords('categorie');
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<?php require_once '../include/nav.php'?>
+<?php require_once 'View/include/nav.php'?>
 
   <div class="container-fluid">
     <div class="row">
@@ -56,8 +48,10 @@ $categories = $categorieModel->selectRecords('categorie');
 
     <!-- Table for Categories -->
     <table class="table">
+    <a href="?page=Categorie&action=addCategory">Add Categorie</a>
         <thead>
             <tr>
+                
                 <th scope="col">#</th>
                 <th scope="col">Category Name</th>
                 <th scope="col">Actions</th>
@@ -69,8 +63,8 @@ $categories = $categorieModel->selectRecords('categorie');
                     <th scope="row"><?= $category['id'] ?></th>
                     <td><?= $category['category_name'] ?></td>
                     <td>
-                        <a href="EditCategory.php?id=<?= $category['id'] ?>">Edit</a>
-                        <a href="DeleteCategory.php?id=<?= $category['id'] ?>">Delete</a>
+                        <a href="?page=Categorie&action=updateCategory&id=<?= $category['id'] ?>">Edit</a>
+                        <a href="?page=Categorie&action=deleteCategory&id=<?= $category['id'] ?>">Delete</a>
                     </td>
                 </tr>
             <?php endforeach; ?>

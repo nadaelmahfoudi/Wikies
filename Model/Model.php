@@ -12,6 +12,27 @@ class Model
         $instance = Database::getInstance();
         $this->pdo = $instance->getConnection();
     }
+
+    public function getElementById(string $table, int $id)
+    {
+        try {
+            // Use prepared statements to prevent SQL injection
+            $sql = "SELECT * FROM $table WHERE id = $id";
+
+            // Prepare the SQL query
+            $stmt = $this->pdo->prepare($sql);
+
+            // Execute the prepared statement with any bound parameters
+            $stmt->execute();
+
+            // Fetch the result set as an associative array
+            $result = $stmt->fetchAll( PDO::FETCH_ASSOC);
+
+            return $result;
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
     // use connection;
     public function selectRecords(string $table, string $columns = "*", string $where = null)
     {
@@ -34,7 +55,6 @@ class Model
 
             return $result;
         } catch (PDOException $e) {
-            $this->logError($e);
             return null;
         }
     }
@@ -65,7 +85,6 @@ class Model
             return true;
             
         } catch (PDOException $e) {
-            $this->logError($e);
             return false;
         }
     }
@@ -80,6 +99,7 @@ class Model
         }
         try {
             $sql = "UPDATE $table SET " . implode(',', $args) . " WHERE id = ?";
+           
 
             $stmt = $this->pdo->prepare($sql);
 
@@ -95,8 +115,7 @@ class Model
                 $i++;
             }
             $stmt->bindParam($i, $id);
-
-
+            
 
             // Execute the prepared statement
             $stmt->execute();
@@ -122,6 +141,43 @@ class Model
             return true;
         } catch (PDOException $e) {
             return false;
+        }
+    }
+
+    public function getTagByName($tagName)
+    {
+        $sql = "SELECT * FROM tag WHERE name = :tagName";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':tagName', $tagName, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function readwiki()
+    {
+        try {
+            $query = "
+                SELECT 
+                article.*, 
+                categorie.name AS categorie_name,
+                user.name AS user_name,
+                tag.name AS tag_name
+                FROM pivot
+                LEFT JOIN article ON article.id = pivot.article_id
+                LEFT JOIN categorie ON article.categorie_id = categorie.id
+                LEFT JOIN user ON article.user_id = user.id
+                LEFT JOIN tag ON pivot.tag_id = tag.id
+                WHERE user.id = :user_id
+            ";
+    
+            $statement = $this->pdo->prepare($query);
+            $statement->bindParam(':user_id', $_SESSION['user_id'], \PDO::PARAM_INT);
+            $statement->execute();
+    
+            return $statement->fetchAll(\PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw $e;
         }
     }
 }

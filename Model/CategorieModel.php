@@ -5,7 +5,12 @@ class CategorieModel extends Model
 {
     public function getAllCategories()
     {
-        return $this->selectRecords('categorie');
+        return $this->selectRecords('categorie');        
+    }
+
+    public function findCategoryById($id)
+    {
+        return $this->getElementById('categorie', $id);
     }
 
     public function addCategory($categoryName)
@@ -17,7 +22,8 @@ class CategorieModel extends Model
     public function updateCategory($categoryId, $categoryName)
     {
         $data = array('category_name' => $categoryName);
-        $where = 'id = ' . $categoryId;
+        $where =  $categoryId;
+        
         return $this->updateRecord('categorie', $data, $where);
     }
 

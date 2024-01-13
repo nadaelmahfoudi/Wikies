@@ -1,19 +1,3 @@
-<?php
-require_once '../../Model/CategorieModel.php'; 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $categoryName = $_POST['category_name'];
-    $categoryModel = new CategorieModel();
-
-    $result = $categoryModel->addCategory($categoryName);
-
-    if ($result) {
-        header('Location: Categorie.php');
-        exit;
-    } else {
-        echo 'Error adding category';
-    }
-}
-?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -25,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<?php require_once '../include/nav.php'?>
+<?php require_once 'View/include/nav.php'?>
 
     <div class="container-fluid">
         <div class="row">
@@ -60,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <h2>Add Category</h2>
 
-                <form method="post" action="">
+                <form method="post" action="?page=Categorie&action=addCategory">
                     <div class="mb-3">
                         <label for="category_name" class="form-label">Category Name</label>
                         <input type="text" class="form-control" id="category_name" name="category_name" required>
