@@ -28,7 +28,7 @@
 
                             <?php endif;?>
                             <li class="nav-item">
-                                <a class="nav-link click-scroll" href="#section_4">FAQs</a>
+                                <a class="nav-link click-scroll" href="#section_10">FAQs</a>
                             </li>
 
 
