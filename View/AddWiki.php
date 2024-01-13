@@ -33,14 +33,19 @@
             <label for="category_id" class="form-label">Category</label>
             <select class="form-select" id="category_id" name="category_id" >
                 <?php
-
                 foreach ($categories as $category) {
-                    
                     echo "<option value='{$category['id']}'>{$category['category_name']}</option>";
                 }
                 ?>
             </select>
         </div>
+
+        <div class="mb-3">
+            <label for="tags" class="form-label">Tags</label>
+            <input type="text" class="form-control" id="tags" name="tags" placeholder="Enter tags separated by commas">
+        </div>
+
+
 
 
         <div class="mb-3">

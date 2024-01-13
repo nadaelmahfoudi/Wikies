@@ -13,6 +13,12 @@ class TagModel extends Model
         return $this->getElementById('tag', $id);
     }
 
+    public function findTagByName($tagName)
+    {
+        $condition = "tag_name = '$tagName'";
+        return $this->selectRecords('tag', $condition);
+    }
+
     public function addTag($tagName)
     {
         $data = array('tag_name' => $tagName);
@@ -32,3 +38,4 @@ class TagModel extends Model
         return $this->deleteRecord('tag', $tagId);
     }
 }
+?>

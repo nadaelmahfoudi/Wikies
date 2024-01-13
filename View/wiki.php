@@ -45,43 +45,51 @@
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <h2>Wiki Entries</h2>
 
-            <!-- Table for Wikies -->
-            <table class="table">
+        <!-- Table for Wikies -->
+        <table class="table">
             <a href="?page=Wiki&action=addWikiEntry">Add Wiki</a>
-                <thead>
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Content</th>
+                    <th scope="col">Date Created</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">User ID</th>
+                    <th scope="col">Category ID</th>
+                    <th scope="col">Tags</th> <!-- Added Tags column -->
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($wikies as $wikie): ?>
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Title</th>
-                        <th scope="col">Content</th>
-                        <th scope="col">Date Created</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">User ID</th>
-                        <th scope="col">Category ID</th>
-                        <th scope="col">Actions</th>
-                        
+                        <th scope="row"><?= $wikie['id'] ?></th>
+                        <td><?= $wikie['title'] ?></td>
+                        <td><?= $wikie['content'] ?></td>
+                        <td><?= $wikie['datecreate'] ?></td>
+                        <td><?= $wikie['status'] ?></td>
+                        <td><?= $wikie['description'] ?></td>
+                        <td><?= $wikie['user_id'] ?></td>
+                        <td><?= $wikie['category_id'] ?></td>
+                        <td>
+                            <?php
+                            // Fetch and display tags for the current wiki entry
+                            $tags = isset($wikie['tags']) ? $wikie['tags'] : [];
+                            echo implode(', ', $tags);
+                            ?>
+                        </td>
+                        <td>
+                            <a href="?page=Categorie&action=updateCategory&id=<?= $wikie['id'] ?>">Edit</a>
+                            <a href="?page=Wiki&action=deleteWikiEntry&id=<?= $wikie['id'] ?>">Delete</a>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($wikies as $wikie): ?>
-                        <tr>
-                            <th scope="row"><?= $wikie['id'] ?></th>
-                            <td><?= $wikie['title'] ?></td>
-                            <td><?= $wikie['content'] ?></td>
-                            <td><?= $wikie['datecreate'] ?></td>
-                            <td><?= $wikie['status'] ?></td>
-                            <td><?= $wikie['description'] ?></td>
-                            <td><?= $wikie['user_id'] ?></td>
-                            <td><?= $wikie['category_id'] ?></td>
-                            <td>
-                                <a href="?page=Categorie&action=updateCategory&id=<?= $wikie['id'] ?>">Edit</a>
-                                <a href="?page=Wiki&action=deleteWikiEntry&id=<?= $wikie['id'] ?>">Delete</a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-            <!-- End Table for Wikies -->
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <!-- End Table for Wikies -->
+
 
         </main>
         <!-- End Main content -->

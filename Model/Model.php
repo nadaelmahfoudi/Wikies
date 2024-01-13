@@ -146,13 +146,14 @@ class Model
 
     public function getTagByName($tagName)
     {
-        $sql = "SELECT * FROM tag WHERE name = :tagName";
+        $sql = "SELECT * FROM tag WHERE tag_name = :tagName";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':tagName', $tagName, PDO::PARAM_STR);
         $stmt->execute();
-
+    
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    
 
     public function readwiki()
     {

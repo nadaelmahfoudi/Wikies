@@ -1,15 +1,12 @@
 <?php
 include 'CategoryController.php';
+include 'Model/TagModel.php';
 
 class WikiController
 {
     private $model;
 
-    public function __construct($model)
-    {
-        $this->model = $model;
-    }
-
+    
     public function getAllWikiEntries()
     {
         $wikie = new WikiModel();
@@ -34,11 +31,27 @@ class WikiController
                 exit;
             }
     
-            $category = new CategorieModel();
-            $categories = $category->getAllCategories();
+            // Handle tags
+            $tagsInput = isset($_POST['tags']) ? $_POST['tags'] : '';
+            $tagsArray = explode(',', $tagsInput);
+    
+            // Add tags if not already added
+            $tagModel = new TagModel();
+            foreach ($tagsArray as $tagName) {
+                $tagName = trim($tagName);
+                if (!empty($tagName)) {
+                    // Check if the tag already exists
+                    $existingTag = $tagModel->findTagByName($tagName);
+    
+                    if (!$existingTag) {
+                        // Tag doesn't exist, add it
+                        $tagModel->addTag($tagName);
+                    }
+                }
+            }
     
             $wikiModel = new WikiModel();
-            $result = $wikiModel->addWikiEntry($title, $content, $dateCreate, $status, $description, $userId, $categoryId);
+            $result = $wikiModel->addWikiEntry($title, $content, $dateCreate, $status, $description, $userId, $categoryId, $tagsArray);
     
             if ($result) {
                 header('Location: /?page=Wiki');
@@ -48,6 +61,8 @@ class WikiController
             }
         }
     }
+    
+
     
 
     public function updateWikiEntry($wikiId, $title, $content, $description, $userId, $categoryId)
@@ -75,6 +90,22 @@ class WikiController
             exit;
         }
     }
+
+    public function getAllWikiEntriesWithTags()
+    {
+        $wikie = new WikiModel();
+        $wikies = $wikie->getAllWikiEntries();
+    
+        // Fetch tags for each wiki entry
+        $tagModel = new TagModel();
+        foreach ($wikies as &$wikie) {
+            $tags = $tagModel->getTagsForWikiEntry($wikie['id']); // Assuming getTagsForWikiEntry is a method in your TagModel
+            $wikie['tags'] = $tags;
+        }
+    
+        return $wikies;
+    }
+    
 
     public function searchWikiByTitle($title) {
         $wikiModel = new WikiModel();
