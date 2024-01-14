@@ -81,6 +81,13 @@
                             ?>
                         </td>
                         <td>
+                        <form method="post" action="?page=Wiki&action=updateWikiStatus&id=<?= $wikie['id'] ?>">
+                            <select name="newStatus" class="form-select" aria-label="Default select example">
+                                <option value="0" <?= $wikie['status'] == 0 ? 'selected' : '' ?>>En attente</option>
+                                <option value="1" <?= $wikie['status'] == 1 ? 'selected' : '' ?>>Affiché</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary">Accepter</button>
+                        </form>
                             <a href="?page=Categorie&action=updateCategory&id=<?= $wikie['id'] ?>">Edit</a>
                             <a href="?page=Wiki&action=deleteWikiEntry&id=<?= $wikie['id'] ?>">Delete</a>
                         </td>

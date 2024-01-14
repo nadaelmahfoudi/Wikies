@@ -5,14 +5,23 @@
 class Router {
     public function route() {
         $page = isset($_GET['page']) ? $_GET['page'] : 'index';
+        $action = isset($_GET['action']) ? $_GET['action'] : 'getWikiDetails';
+        switch ($action){
+            case 'getWikiDetails':
+            $this->handleWikiDetails();
+            break;
+            case 'searchWikiByTitle':
+                $this->handleSearch();
+                break;
+        }
 
         switch ($page) {
             case 'Categorie':
                 $this->handleCategories();
                 break;
             case 'Wiki':
-                $this->handleWikies();
-                break;
+                    $this->handleWikies();
+                    break;
             case 'Tag':
                 $this->handleTags();
                 break;
@@ -20,6 +29,18 @@ class Router {
                 $this->handleHome();
         }
     }
+
+    private function handleWikiDetails() {
+        require_once 'Model/WikiModel.php';
+        require_once 'Controller/WikiController.php';
+    
+        $wikiModel = new WikiModel();
+        $wikiController = new WikiController($wikiModel);
+    
+        $wikiId = isset($_GET['id']) ? $_GET['id'] : '';
+        $wikiController->getWikiDetails($wikiId);
+    }
+    
 
     private function handleHome() {
         header("Location: View/index.php");
@@ -62,18 +83,24 @@ class Router {
     private function handleWikies() {
         require_once 'Model/WikiModel.php'; 
         require_once 'Controller/WikiController.php'; 
-        require_once 'Model/CategorieModel.php';  // Add this line
-        require_once 'Controller/CategoryController.php';  // Add this line
-    
-        $categoryModel = new CategorieModel();  // Add this line
-        $categoryController = new CategoryController($categoryModel);  // Add this line
-        $categories = $categoryController->getAllCategories();  // Add this line
-    
+        require_once 'Model/CategorieModel.php';  
+        require_once 'Controller/CategoryController.php';  
+        
+        $categoryModel = new CategorieModel();  
+        $categoryController = new CategoryController($categoryModel);  
+        $categories = $categoryController->getAllCategories();  
+        
         $wikiModel = new WikiModel();
         $wikiController = new WikiController($wikiModel);
-    
+        
         $action = isset($_GET['action']) ? $_GET['action'] : 'getAllWikiEntries';
-    
+        $wikies = [];
+        
+        switch ($action) {
+            case 'getAllWikiEntries':
+                $wikies = $wikiController->getAllWikiEntries();
+                include 'View/Wiki.php';
+                break;
         switch ($action) {
             case 'getAllWikiEntries':
                 $wikies = $wikiController->getAllWikiEntries();
@@ -96,10 +123,24 @@ class Router {
                     $wikiId = isset($_GET['id']) ? $_GET['id'] : '';
                     $wikiController->deleteWikiEntry($wikiId);
                     break;
+
+                    case 'updateWikiStatus':
+                        $wikiId = isset($_GET['id']) ? $_GET['id'] : '';
+                        $newStatus = isset($_POST['newStatus']) ? $_POST['newStatus'] : '';
+                    
+                        // Vérifiez si le statut est valide (0 ou 1)
+                        if ($newStatus === '0' || $newStatus === '1') {
+                            $wikiController->updateWikiStatus($wikiId, $newStatus);
+                        }
+                    
+                        header("Location: ?page=Wiki&action=getAllWikiEntries");
+                        break;
+
                 default:
                 $wikiController->getAllWikiEntries();
         }
     }
+}
 
     private function handleTags() {
         require_once 'Model/TagModel.php'; 
@@ -130,9 +171,21 @@ class Router {
                 $tagId = isset($_GET['id']) ? $_GET['id'] : '';  
                 $tagController->deleteTag($tagId);  
                 break;
+
             default:
                 $tagController->getAllTags();  
         }
+    }
+
+    private function handleSearch() {
+        require_once 'Model/WikiModel.php';
+        require_once 'Controller/WikiController.php';
+    
+        $wikiModel = new WikiModel();
+        $wikiController = new WikiController($wikiModel);
+    
+        $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
+        $wikiController->searchWikiByTitle($keyword);
     }
     
     

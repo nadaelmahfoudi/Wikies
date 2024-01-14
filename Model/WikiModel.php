@@ -5,7 +5,8 @@ require_once 'CategorieModel.php';
 
 class WikiModel extends Model
 {
-    public function getAllWikiEntries()
+
+    public function getAllWikiEntries() 
     {
         return $this->selectRecords('wiki');
     }
@@ -75,7 +76,13 @@ class WikiModel extends Model
         }
     }
     
+    public function updateWikiStatus($wikiId, $newStatus) {
+        $query = "UPDATE wikie SET status = :newStatus WHERE id = :wikiId";
+        $params = array(':newStatus' => $newStatus, ':wikiId' => $wikiId);
     
+        $this->pdo->execute($query, $params);
+    }
+
     private function insertWikiEntry($title, $content, $dateCreate, $status, $description, $userId, $categoryId)
     {
         $data = array(
@@ -113,25 +120,6 @@ class WikiModel extends Model
     }
 }
 
-public function getTagsForWikiEntry($wikiId)
-{
-    try {
-        // Assuming there is a pivot table named wiki_tags that links wikis and tags
-        $sql = "SELECT tag.* FROM tag
-                JOIN wiki_tags ON tag.id = wiki_tags.tag_id
-                WHERE wiki_tags.wiki_id = :wikiId";
-
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':wikiId', $wikiId, PDO::PARAM_INT);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        // Handle the exception (you may want to log it or throw a custom exception)
-        return [];
-    }
-}
-    
 
     public function updateWikiEntry($wikiId, $title, $content, $dateCreate, $status, $description, $user_id, $categoryId)
     {
@@ -160,10 +148,59 @@ public function getTagsForWikiEntry($wikiId)
         return $this->selectRecords('categorie');
     }
 
-    public function searchWikiByTitle($title) {
-        
-        $result = array('title' => $title);
 
-        return $result;
+
+// Add a new method to retrieve detailed information for a single wiki entry
+public function getWikiDetails($wikiId) {
+    $sql = "SELECT * FROM wiki WHERE id = :id";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->bindParam(':id', $wikiId, PDO::PARAM_INT);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
+    if (!$result) {
+        // Handle the case when no result is found, e.g., return an empty array or null
+        return null;
     }
+    
+    // Fetch tags for the wiki entry
+    $result['tags'] = $this->getWikiTags($wikiId);
+    
+    return $result;
+}
+
+// Add a new method to retrieve tags for a wiki entry
+public function getWikiTags($wikiId)
+    {
+        $sql = "SELECT GROUP_CONCAT(t.tag_name) AS concatenated_tags
+                FROM tag t
+                JOIN wiki_tags wt ON t.id = wt.tag_id
+                WHERE wt.wiki_id = :wiki_id";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':wiki_id', $wikiId, PDO::PARAM_INT);
+        $stmt->execute();
+        $tags = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+        return $tags;
+    }
+
+
+public function searchWikiByTitle($title) {
+    $sql = "SELECT * FROM wiki WHERE title LIKE :title";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->bindParam(':title', '%' . $title . '%', PDO::PARAM_STR);
+    $stmt->execute();
+
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    return $results;
+}
+
+
+
+
+
+
 }

@@ -1,5 +1,6 @@
 <?php
 include 'CategoryController.php';
+require_once 'Controller/TagController.php';
 include 'Model/TagModel.php';
 
 class WikiController
@@ -8,7 +9,7 @@ class WikiController
 
     
     public function getAllWikiEntries()
-    {
+    { 
         $wikie = new WikiModel();
         $wikies = $wikie->getAllWikiEntries();
         return $wikies;
@@ -63,7 +64,24 @@ class WikiController
     }
     
 
+    public function updateWikiStatus($wikiId, $newStatus) {
+        // Assurez-vous que $wikiId est un entier
+        $wikiId = intval($wikiId);
     
+        // Assurez-vous que $newStatus est soit 0, soit 1
+        if ($newStatus !== '0' && $newStatus !== '1') {
+            return; // Statut non valide
+        }
+        $wikiModel = new WikiModel();
+        $result = $wikiModel->updateWikiStatus($wikiId, $newStatus);
+
+        if ($result) {
+            header('Location: /?page=Wiki');
+            exit;
+        } else {
+            echo 'Error adding wiki entry.';
+        }
+    }
 
     public function updateWikiEntry($wikiId, $title, $content, $description, $userId, $categoryId)
     {
@@ -99,17 +117,41 @@ class WikiController
         // Fetch tags for each wiki entry
         $tagModel = new TagModel();
         foreach ($wikies as &$wikie) {
-            $tags = $tagModel->getTagsForWikiEntry($wikie['id']); // Assuming getTagsForWikiEntry is a method in your TagModel
+            $tags = $tagModel->getWikiTags($wikie['id']); // Assuming getTagsForWikiEntry is a method in your TagModel
             $wikie['tags'] = $tags;
         }
     
         return $wikies;
     }
+
+
+public function getWikiDetails($wikiId) {
+    $wikiModel = new WikiModel();
+    $result = $wikiModel->getWikiDetails($wikiId);
     
+    // Fetch tags for the wiki entry using TagModel directly
+    $tagModel = new TagModel();
+    $result['tags'] = $tagModel->getWikiTags($wikiId);
+
+    if ($result && !empty($result)) {
+        // Pass the $result to the view
+        include 'View/single_pageWiki.php';
+    } else {
+        echo 'Error';
+    }
+}
+
+    
+    
+
 
     public function searchWikiByTitle($title) {
         $wikiModel = new WikiModel();
         $results = $wikiModel->searchWikiByTitle($title);
-        
+    
+        // Maintenant, vous pouvez passer les résultats à votre vue
+        // et afficher les résultats dans la vue.
+        include 'View/index.php';
     }
+    
 }
