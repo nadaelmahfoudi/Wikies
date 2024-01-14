@@ -1,11 +1,10 @@
 <?php
-include '../Model/WikiModel.php'; 
+include '../Model/WikiModel.php';
 $wikiModel = new WikiModel();
 
-// Fetch $wikiId from the URL
 $wikiId = isset($_GET['id']) ? $_GET['id'] : '';
 
-$wikiDetails = $wikiModel->getWikiDetails($wikiId);
+$wikiDetails = $wikiModel->singlePageDetail($wikiId);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,27 +18,38 @@ $wikiDetails = $wikiModel->getWikiDetails($wikiId);
 <body>
 <?php require_once 'include/nav.php'?>
 
-    <div class="container">
-        <h2>Wiki Details</h2>
-        <?php if (isset($wikiDetails) && !empty($wikiDetails)): ?>
-            <p>Title: <?php echo $wikiDetails['title']; ?></p>
-            <p>Content: <?php echo $wikiDetails['content']; ?></p>
-            <p>Date Created: <?php echo $wikiDetails['datecreate']; ?></p>
-            <p>Description: <?php echo $wikiDetails['description']; ?></p>
-            <p>Category ID: <?php echo $wikiDetails['category_id']; ?></p>
-            
-            <?php if (isset($wikiDetails['tags']) && !empty($wikiDetails['tags'])): ?>
-                <p>Tags: <?php echo implode(', ', $wikiDetails['tags']); ?></p>
-            <?php endif; ?>
 
-            
-            
-            <!-- Add more details as needed -->
-        <?php else: ?>
-            <?php var_dump($wikiDetails);?>
-            <p>Wiki details not found.</p>
-        <?php endif; ?>
+<div class="container mt-4">
+    <div class="jumbotron">
+        <h1 class="display-4">Wiki Details</h1>
     </div>
+
+    <?php if (!empty($wikiDetails)): ?>
+        <div class="card">
+            <div class="card-header">
+                <h2><?php echo htmlspecialchars($wikiDetails['title']); ?></h2>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Author: <?php echo htmlspecialchars($wikiDetails['author']); ?></h5>
+                <p class="card-text"><?php echo nl2br(htmlspecialchars($wikiDetails['content'])); ?></p>
+                <p>Date Created: <?php echo htmlspecialchars($wikiDetails['datecreate']); ?></p>
+                <p>Description: <?php echo htmlspecialchars($wikiDetails['description']); ?></p>
+                <p>Category: <span class="badge bg-primary"><?php echo htmlspecialchars($wikiDetails['category']); ?></span></p>
+                <?php if (!empty($wikiDetails['tags'])): ?>
+                    <p>Tags:
+                        <?php foreach (explode(', ', $wikiDetails['tags']) as $tag): ?>
+                            <span class="badge bg-secondary"><?php echo htmlspecialchars($tag); ?></span>
+                        <?php endforeach; ?>
+                    </p>
+                <?php endif; ?>
+            </div>
+        </div>
+    <?php else: ?>
+        <div class="alert alert-warning" role="alert">
+            Wiki details not found.
+        </div>
+    <?php endif; ?>
+</div>
 
     <!-- Add your JS scripts or link to external scripts here -->
 </body>

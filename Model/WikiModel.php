@@ -198,6 +198,32 @@ public function searchWikiByTitle($title) {
     return $results;
 }
 
+public function singlePageDetail($wikiId)
+{
+    $sql = "SELECT wiki.id, wiki.title, wiki.content, wiki.status AS is_archived,
+                   wiki.datecreate, wiki.description,
+                   user.name AS author, categorie.category_name AS category,
+                   GROUP_CONCAT(tag.tag_name ORDER BY tag.tag_name ASC SEPARATOR ', ') AS tags
+            FROM wiki
+                 INNER JOIN user ON wiki.user_id = user.id
+                 INNER JOIN categorie ON wiki.category_id = categorie.id
+                 LEFT JOIN wiki_tags ON wiki.id = wiki_tags.wiki_id
+                 LEFT JOIN tag ON wiki_tags.tag_id = tag.id
+            WHERE wiki.id = :wikiId
+            GROUP BY wiki.id";
+
+    try {
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':wikiId', $wikiId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Database Error: " . $e->getMessage());
+        return null;
+    }
+}
+
 
 
 
