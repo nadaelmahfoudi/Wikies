@@ -1,45 +1,46 @@
 <?php
-// router.php
+require_once 'autoload.php';
 
 
 class Router {
     public function route() {
         $page = isset($_GET['page']) ? $_GET['page'] : 'index';
         $action = isset($_GET['action']) ? $_GET['action'] : 'getWikiDetails';
-        switch ($action){
-            case 'getWikiDetails':
-            $this->handleWikiDetails();
-            break;
-            case 'searchWikiByTitle':
-                $this->handleSearch();
-                break;
-        }
+  
 
         switch ($page) {
             case 'Categorie':
                 $this->handleCategories();
                 break;
             case 'Wiki':
-                    $this->handleWikies();
+                $input =  $_POST['input'];
+                    $this->handleWikies($input);
                     break;
             case 'Tag':
                 $this->handleTags();
                 break;
+            case 'searchWikiByTitle':
+                $input =  $_POST['input'];
+                $this->handleWikies($input);
+
+                  break;
             default:
                 $this->handleHome();
+
+
         }
     }
 
-    private function handleWikiDetails() {
-        require_once 'Model/WikiModel.php';
-        require_once 'Controller/WikiController.php';
+    // private function handleWikiDetails() {
+    //     require_once 'Model/WikiModel.php';
+    //     require_once 'Controller/WikiController.php';
     
-        $wikiModel = new WikiModel();
-        $wikiController = new WikiController($wikiModel);
+    //     $wikiModel = new WikiModel();
+    //     $wikiController = new WikiController($wikiModel);
     
-        $wikiId = isset($_GET['id']) ? $_GET['id'] : '';
-        $wikiController->getWikiDetails($wikiId);
-    }
+    //     $wikiId = isset($_GET['id']) ? $_GET['id'] : '';
+    //     $wikiController->getWikiDetails($wikiId);
+    // }
     
 
     private function handleHome() {
@@ -80,11 +81,13 @@ class Router {
         }
     }
 
-    private function handleWikies() {
+    private function handleWikies($input) {
         require_once 'Model/WikiModel.php'; 
         require_once 'Controller/WikiController.php'; 
         require_once 'Model/CategorieModel.php';  
-        require_once 'Controller/CategoryController.php';  
+        require_once 'Controller/CategoryController.php';   
+        require_once 'Model/TagModel.php';  
+        require_once 'Controller/TagController.php';   
         
         $categoryModel = new CategorieModel();  
         $categoryController = new CategoryController($categoryModel);  
@@ -92,30 +95,44 @@ class Router {
         
         $wikiModel = new WikiModel();
         $wikiController = new WikiController($wikiModel);
+
+        
+        $tagModel = new TagModel();
+        $tagController = new TagController($tagModel);
+        $tags = $tagController->getAllTags();  
         
         $action = isset($_GET['action']) ? $_GET['action'] : 'getAllWikiEntries';
         $wikies = [];
         
+
         switch ($action) {
             case 'getAllWikiEntries':
-                $wikies = $wikiController->getAllWikiEntries();
-                include 'View/Wiki.php';
+               
+                if($input == 'All'){
+                    $wikies = $wikiController->getAllWikiEntries();
+                    include 'View/search.php';
+                }else{
+                    $wikies = $wikiController->searchWikiByTitle($input);
+                    include 'View/search.php';
+
+
+                 }   
+
+
+
+                
                 break;
-        switch ($action) {
-            case 'getAllWikiEntries':
-                $wikies = $wikiController->getAllWikiEntries();
-                include 'View/Wiki.php';
-                break;
+
             case 'addWikiEntry':
                 $title = isset($_POST['title']) ? $_POST['title'] : '';
                 $content = isset($_POST['content']) ? $_POST['content'] : '';
                 $dateCreate = isset($_POST['datecreate']) ? $_POST['datecreate'] : '';
                 $status = isset($_POST['status']) ? $_POST['status'] : '';
                 $description = isset($_POST['description']) ? $_POST['description'] : '';
-                $userId = isset($_POST['user_id']) ? $_POST['user_id'] : '';
                 $categoryId = isset($_POST['category_id']) ? $_POST['category_id'] : '';
-                $categories = $categoryController->getAllCategories();  // Add this line
-                $wikiController->addWikiEntry($title, $content, $dateCreate, $status, $description, $userId, $categoryId);
+                $categories = $categoryController->getAllCategories();
+                $tags = $tagController->getAllTags();
+                $wikiController->addWikiEntry($title, $content, $dateCreate, $status, $description, $categoryId);
                 // Pass $categories to the method
                 include 'View/AddWiki.php';
                 break;
@@ -140,7 +157,7 @@ class Router {
                 $wikiController->getAllWikiEntries();
         }
     }
-}
+
 
     private function handleTags() {
         require_once 'Model/TagModel.php'; 
@@ -178,14 +195,15 @@ class Router {
     }
 
     private function handleSearch() {
+   
         require_once 'Model/WikiModel.php';
         require_once 'Controller/WikiController.php';
     
         $wikiModel = new WikiModel();
         $wikiController = new WikiController($wikiModel);
     
-        $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
-        $wikiController->searchWikiByTitle($keyword);
+    
+         $wikiController->searchWikiByTitle($keyword);
     }
     
     

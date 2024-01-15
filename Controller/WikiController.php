@@ -15,7 +15,7 @@ class WikiController
         return $wikies;
     }
 
-    public function addWikiEntry($title, $content, $dateCreate, $status, $description, $userId, $categoryId)
+    public function addWikiEntry($title, $content, $dateCreate, $status, $description, $categoryId)
     {
         // Process the form data only when the request method is POST
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -24,7 +24,6 @@ class WikiController
             $dateCreate = date('Y-m-d H:i:s');
             $status = $_POST['status'];
             $description = $_POST['description'];
-            $user_id = $_POST['user_id'];
     
             $categoryId = isset($_POST['category_id']) ? (int)$_POST['category_id'] : null;
             if ($categoryId === null) {
@@ -34,9 +33,13 @@ class WikiController
     
             // Handle tags
             $tagsInput = isset($_POST['tags']) ? $_POST['tags'] : '';
-            $tagsArray = explode(',', $tagsInput);
+            if (!is_array($tagsInput)) {
+                $tagsArray = explode(',', $tagsInput);
+            } else {
+                $tagsArray = $tagsInput;
+            }
     
-            // Add tags if not already added
+            //Add tags if not already added
             $tagModel = new TagModel();
             foreach ($tagsArray as $tagName) {
                 $tagName = trim($tagName);
@@ -52,7 +55,8 @@ class WikiController
             }
     
             $wikiModel = new WikiModel();
-            $result = $wikiModel->addWikiEntry($title, $content, $dateCreate, $status, $description, $userId, $categoryId, $tagsArray);
+            $$result = $wikiModel->addWikiEntry($title, $content, $dateCreate, $status, $description, $userId, $categoryId, $tagsArray);
+
     
             if ($result) {
                 header('Location: /?page=Wiki');
@@ -83,10 +87,7 @@ class WikiController
         }
     }
 
-    public function updateWikiEntry($wikiId, $title, $content, $description, $userId, $categoryId)
-    {
-        $result = $this->model->updateWikiEntry($wikiId, $title, $content, $description, $userId, $categoryId);
-    }
+
 
     public function deleteWikiEntry($wikiId)
     {
@@ -109,49 +110,97 @@ class WikiController
         }
     }
 
-    public function getAllWikiEntriesWithTags()
-    {
-        $wikie = new WikiModel();
-        $wikies = $wikie->getAllWikiEntries();
-    
-        // Fetch tags for each wiki entry
-        $tagModel = new TagModel();
-        foreach ($wikies as &$wikie) {
-            $tags = $tagModel->getWikiTags($wikie['id']); // Assuming getTagsForWikiEntry is a method in your TagModel
-            $wikie['tags'] = $tags;
+    public function editWikiEntry() {
+        $wikiModel = new WikiModel(); // Create an instance of WikiModel
+        $categories = $wikiModel->getAllCategories();
+        
+        if (isset($_GET['id'])) {
+            $wikiId = $_GET['id'];
+            $wikiEntry = $wikiModel->selectRecords('wiki', 'id = ' . $wikiId);
+
+            if (empty($wikiEntry)) {
+                echo 'Wiki entry not found';
+                exit;
+            }
+
+            $wikiEntry = $wikiEntry[0];
+
+            // Assuming you have a method to get tags for this entry
+            $tags = $wikiModel->getTagsForWikiEntry($wikiId);
+            $selectedTags = array_column($tags, 'tag_id');
+        } else {
+            echo 'Wiki ID not provided';
+            exit;
         }
-    
-        return $wikies;
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Process the form submission
+            $title = $_POST['title'];
+            $content = $_POST['content'];
+            $dateCreate = $_POST['datecreate'];
+            $status = $_POST['status'];
+            $description = $_POST['description'];
+            $categoryId = isset($_POST['category_id']) ? (int)$_POST['category_id'] : null;
+            $tags = isset($_POST['tags']) ? $_POST['tags'] : [];
+
+            // Update the Wiki entry
+            $result = $wikiModel->updateWikiEntry($wikiId, $title, $content, $dateCreate, $status, $description, $categoryId, $tags);
+
+            if ($result) {
+                header('Location: Wiki.php');
+                exit;
+            } else {
+                echo 'Error updating wiki entry.';
+            }
+        }
+
+        require_once 'EditWiki.php';
     }
 
 
-public function getWikiDetails($wikiId) {
+
+    // public function getAllWikiEntriesWithTags()
+    // {
+    //     $wikie = new WikiModel();
+    //     $wikies = $wikie->getAllWikiEntries();
+    
+    //     // Fetch tags for each wiki entry
+    //     $tagModel = new TagModel();
+    //     foreach ($wikies as &$wikie) {
+    //         $tags = $tagModel->getWikiTags($wikie['id']); // Assuming getTagsForWikiEntry is a method in your TagModel
+    //         $wikie['tags'] = $tags;
+    //     }
+    
+    //     return $wikies;
+    // }
+
+
+// public function getWikiDetails($wikiId) {
+//     $wikiModel = new WikiModel();
+//     $result = $wikiModel->getWikiDetails($wikiId);
+    
+//     // Fetch tags for the wiki entry using TagModel directly
+//     $tagModel = new TagModel();
+//     $result['tags'] = $tagModel->getWikiTags($wikiId);
+
+//     if ($result && !empty($result)) {
+//         // Pass the $result to the view
+//         include 'View/single_pageWiki.php';
+//     } else {
+//         echo 'Error';
+//     }
+// }
+
+    
+    
+
+
+    public function searchWikiByTitle($input) {
+
+        
     $wikiModel = new WikiModel();
-    $result = $wikiModel->getWikiDetails($wikiId);
-    
-    // Fetch tags for the wiki entry using TagModel directly
-    $tagModel = new TagModel();
-    $result['tags'] = $tagModel->getWikiTags($wikiId);
-
-    if ($result && !empty($result)) {
-        // Pass the $result to the view
-        include 'View/single_pageWiki.php';
-    } else {
-        echo 'Error';
-    }
-}
-
-    
-    
-
-
-    public function searchWikiByTitle($title) {
-        $wikiModel = new WikiModel();
-        $results = $wikiModel->searchWikiByTitle($title);
-    
-        // Maintenant, vous pouvez passer les résultats à votre vue
-        // et afficher les résultats dans la vue.
-        include 'View/index.php';
+    return $wikiModel->searchWikiByTitle($input);
+              
     }
     
 }

@@ -187,25 +187,27 @@ public function getWikiTags($wikiId)
     }
 
 
-public function searchWikiByTitle($title) {
-    $sql = "SELECT * FROM wiki WHERE title LIKE :title";
-    $stmt = $this->pdo->prepare($sql);
-    $stmt->bindParam(':title', '%' . $title . '%', PDO::PARAM_STR);
-    $stmt->execute();
-
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    return $results;
-}
+    public function searchWikiByTitle($input) {
+        $sql = "SELECT * FROM wiki WHERE title LIKE :input";
+        $stmt = $this->pdo->prepare($sql);
+    
+        // Use bindValue instead of bindParam
+        $stmt->bindValue(':input', '%' . $input . '%', PDO::PARAM_STR);
+    
+        $stmt->execute();
+    
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
 
 public function singlePageDetail($wikiId)
 {
     $sql = "SELECT wiki.id, wiki.title, wiki.content, wiki.status AS is_archived,
                    wiki.datecreate, wiki.description,
-                   user.name AS author, categorie.category_name AS category,
+                    categorie.category_name AS category,
                    GROUP_CONCAT(tag.tag_name ORDER BY tag.tag_name ASC SEPARATOR ', ') AS tags
             FROM wiki
-                 INNER JOIN user ON wiki.user_id = user.id
+                 
                  INNER JOIN categorie ON wiki.category_id = categorie.id
                  LEFT JOIN wiki_tags ON wiki.id = wiki_tags.wiki_id
                  LEFT JOIN tag ON wiki_tags.tag_id = tag.id

@@ -61,11 +61,11 @@ https://templatemo.com/tm-590-topic-listing
 
                             <h6 class="text-center">platform for wikies around the world</h6>
 
-                            <form method="get" action="" class="custom-form mt-4 pt-2 mb-lg-0 mb-5" role="search">
+                            <form method="POST" action="" class="custom-form mt-4 pt-2 mb-lg-0 mb-5" role="search">
                                 <!-- Votre contenu de formulaire -->
                                 <div class="input-group input-group-lg">
                                     <span class="input-group-text bi-search" id="basic-addon1"></span>
-                                    <input name="keyword" type="search" class="form-control" id="keyword" placeholder="Design, Code, Marketing, Finance ..." aria-label="Search">
+                                    <input name="keyword" type="search" oninput="search()" class="form-control" id="keyword" placeholder="Design, Code, Marketing, Finance ..." aria-label="Search">
                                     <button type="submit" value="submit" class="form-control">Search</button>
                                 </div>
                             </form>
@@ -208,8 +208,8 @@ https://templatemo.com/tm-590-topic-listing
             <div class="col-12">
                 <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="design-tab-pane" role="tabpanel" aria-labelledby="design-tab" tabindex="0">
-    <div class="row">
-        <?php if(isset($wikies) && !empty($wikies)): ?>
+                <div class="row" id="showdata" >     
+                       <?php if(isset($wikies) && !empty($wikies)): ?>
             <?php foreach ($wikies as $wikie): ?>
                 <div class="col-lg-6 col-12">
                     <div class="custom-block custom-block-overlay">
@@ -732,28 +732,25 @@ https://templatemo.com/tm-590-topic-listing
         <script src="js/custom.js"></script>
         
         <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-        <script>$(document).ready(function () {
-    $('#keyword').on("keyup", function () {
-        var input = $(this).val();
+ 
+<script>
+     // Assurez-vous que le DOM est chargé avant d'exécuter du code jQuery
+ 
+    function search(){
 
-        // Handle the 'all' case
-        if (input === "") {
-            input = 'all';
+            var input = $('#keyword').val(); 
+
+            $.ajax({
+                url: "/?page=searchWikiByTitle",
+                method: "POST",
+                data: {
+                    input: input
+                },
+                success: function(data){
+                    $("#showdata").html(data);
+                }
+            });
         }
-
-        $.ajax({
-            url: "../Router.php?action=searchWikiByTitle&keyword=" + input,
-            method: "GET",
-            success: function (data) {
-                $("#showdata").html(data);
-            },
-            error: function (xhr, status, error) {
-                console.error("AJAX request failed:", status, error);
-            }
-        });
-    });
-});
-
 </script>
 
     </body>
