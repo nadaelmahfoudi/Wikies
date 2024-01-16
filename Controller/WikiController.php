@@ -14,6 +14,19 @@ class WikiController
         $wikies = $wikie->getAllWikiEntries();
         return $wikies;
     }
+    public function getAuthorWiki($id){
+        $wikie = new WikiModel();
+        $wikies = $wikie->getAuthorWiki($id);
+        return $wikies;
+    }
+
+
+    public function getAcceptedWikies()
+    { 
+        $wikie = new WikiModel();
+        $wikies = $wikie->getAcceptedWikies();
+        return $wikies;
+    }
 
     public function addWikiEntry($title, $content, $dateCreate, $status, $description, $categoryId)
     {
@@ -54,8 +67,9 @@ class WikiController
                 }
             }
     
+            $userId = 2;
             $wikiModel = new WikiModel();
-            $$result = $wikiModel->addWikiEntry($title, $content, $dateCreate, $status, $description, $userId, $categoryId, $tagsArray);
+            $result = $wikiModel->addWikiEntry($title, $content, $dateCreate, $status, $description, $userId, $categoryId, $tagsArray);
 
     
             if ($result) {
@@ -69,13 +83,9 @@ class WikiController
     
 
     public function updateWikiStatus($wikiId, $newStatus) {
-        // Assurez-vous que $wikiId est un entier
         $wikiId = intval($wikiId);
     
-        // Assurez-vous que $newStatus est soit 0, soit 1
-        if ($newStatus !== '0' && $newStatus !== '1') {
-            return; // Statut non valide
-        }
+
         $wikiModel = new WikiModel();
         $result = $wikiModel->updateWikiStatus($wikiId, $newStatus);
 

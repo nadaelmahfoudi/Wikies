@@ -7,7 +7,7 @@ $categories = $categorieModel->selectRecords('categorie');
 
 
 $wikiModel = new WikiModel();
-$wikies = $wikiModel->selectRecords('wiki');
+$wikies = $wikiModel->getAcceptedWikies();
 
 
 ?>
@@ -209,7 +209,7 @@ https://templatemo.com/tm-590-topic-listing
                 <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="design-tab-pane" role="tabpanel" aria-labelledby="design-tab" tabindex="0">
                 <div class="row" id="showdata" >     
-                       <?php if(isset($wikies) && !empty($wikies)): ?>
+                       <?php if(isset($wikies) && !empty($wikies) ): ?>
             <?php foreach ($wikies as $wikie): ?>
                 <div class="col-lg-6 col-12">
                     <div class="custom-block custom-block-overlay">
@@ -741,7 +741,7 @@ https://templatemo.com/tm-590-topic-listing
             var input = $('#keyword').val(); 
 
             $.ajax({
-                url: "/?page=searchWikiByTitle",
+                url: "/?page=Wiki&action=searchWikiByTitle",
                 method: "POST",
                 data: {
                     input: input

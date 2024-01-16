@@ -23,7 +23,7 @@
                             if (isset($_SESSION['roleUser']) && $_SESSION['roleUser'] == 'admin'):
                             ?>
                             <li class="nav-item">
-                                <a class="nav-link click-scroll" href="Dashboard.php">Dashboard</a>
+                                <a class="nav-link click-scroll" href="../?page=Wiki.php">Dashboard</a>
                             </li>
 
                             <?php endif;?>

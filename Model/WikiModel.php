@@ -10,6 +10,10 @@ class WikiModel extends Model
     {
         return $this->selectRecords('wiki');
     }
+    public function getAcceptedWikies() 
+    {
+        return $this->selectRecords('wiki','*','status = 1');
+    }
 
     public function addWikiEntry($title, $content, $dateCreate, $status, $description, $userId, $categoryId, $tags)
     {
@@ -18,12 +22,10 @@ class WikiModel extends Model
             $title = $_POST['title'];
             $content = $_POST['content'];
             $dateCreate = date('Y-m-d H:i:s');
-            $status = $_POST['status'];
             $description = $_POST['description'];
-            $user_id = $_POST['user_id'];
     
-            $categoryId = isset($_POST['category_id']) ? (int)$_POST['category_id'] : null;
-            if ($categoryId === null) {
+            $category_id = isset($_POST['category_id']) ? (int)$_POST['category_id'] : null;
+            if ($category_id === null) {
                 echo 'Error: Category is required.';
                 exit;
             }
@@ -32,9 +34,10 @@ class WikiModel extends Model
             if (is_array($tags)) {
                 $tags = implode(',', $tags);
             }
-            $userId = $_SESSION['idUser'];
+            $user_id = $_SESSION['idUser'] ?? 2;
 
-            $result = $this->addWikiEntry($title, $content, $dateCreate, $status, $description, $userId, $categoryId, $tagsArray);
+
+            $result = $this->insertRecord('wiki',compact('title','content','dateCreate','description','user_id','category_id'));
     
     
             if (!$result) {
@@ -78,10 +81,17 @@ class WikiModel extends Model
     }
     
     public function updateWikiStatus($wikiId, $newStatus) {
-        $query = "UPDATE wikie SET status = :newStatus WHERE id = :wikiId";
+        
+        $query = "UPDATE wiki SET status = :newStatus WHERE id = :wikiId";
+        if($newStatus == 0){
+            $newStatus = 1;
+        }else{
+            $newStatus == 0;
+        }
+        $stmt = $this->pdo->prepare($query);
         $params = array(':newStatus' => $newStatus, ':wikiId' => $wikiId);
     
-        $this->pdo->execute($query, $params);
+        $stmt->execute($params);
     }
 
     private function insertWikiEntry($title, $content, $dateCreate, $status, $description, $userId, $categoryId)

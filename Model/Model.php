@@ -181,6 +181,10 @@ class Model
             throw $e;
         }
     }
+    public function getAuthorWiki($id){
+        return $this->selectRecords('wiki', '*', 'user_id = '.$id);
+
+    }
 }
 
 

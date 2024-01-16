@@ -14,17 +14,12 @@ class Router {
                 $this->handleCategories();
                 break;
             case 'Wiki':
-                $input =  $_POST['input'];
-                    $this->handleWikies($input);
+                    $this->handleWikies();
                     break;
             case 'Tag':
                 $this->handleTags();
                 break;
-            case 'searchWikiByTitle':
-                $input =  $_POST['input'];
-                $this->handleWikies($input);
 
-                  break;
              case 'Statistic':
                 $this->handleStatistiques();
                  break;
@@ -85,7 +80,7 @@ class Router {
         }
     }
 
-    private function handleWikies($input) {
+    private function handleWikies() {
         require_once 'Model/WikiModel.php'; 
         require_once 'Controller/WikiController.php'; 
         require_once 'Model/CategorieModel.php';  
@@ -110,22 +105,30 @@ class Router {
         
 
         switch ($action) {
-            case 'getAllWikiEntries':
-               
+            case 'searchWikiByTitle':
+                $input =  $_POST['input'] ?? '';
                 if($input == 'All'){
                     $wikies = $wikiController->getAllWikiEntries();
                     include 'View/search.php';
                 }else{
                     $wikies = $wikiController->searchWikiByTitle($input);
                     include 'View/search.php';
-
-
                  }   
-
-
-
                 
                 break;
+                case 'myWiki':
+                    $wikiModel = new WikiModel();  
+                    $wikiController = new wikiController($wikiModel);  
+                    $wikies = $wikiController->getAuthorWiki($_SESSION['idUser']); 
+                    include 'View/Wiki.php';
+                    break;
+                    
+            case 'getAllWikiEntries':
+                    $wikiModel = new WikiModel();  
+                    $wikiController = new wikiController($wikiModel);  
+                    $wikies = $wikiController->getAllWikiEntries(); 
+                    include 'View/Wiki.php';
+                    break;
 
             case 'addWikiEntry':
                 $title = isset($_POST['title']) ? $_POST['title'] : '';
@@ -158,7 +161,7 @@ class Router {
                         break;
 
                 default:
-                $wikiController->getAllWikiEntries();
+                $wikiController->getAcceptedWikies();
         }
     }
 

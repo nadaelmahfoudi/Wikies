@@ -68,10 +68,6 @@
             <input type="datetime-local" class="form-control" id="dateCreate" name="datecreate" required>
         </div>
         <div class="mb-3">
-            <label for="status" class="form-label">Status</label>
-            <input type="text" id="status" name="status" value="1" > 
-        </div>
-        <div class="mb-3">
             <label for="description" class="form-label">Description</label>
             <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
         </div>

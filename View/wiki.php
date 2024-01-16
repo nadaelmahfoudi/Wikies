@@ -21,9 +21,7 @@
             <h2>Wiki Entries</h2>
 
         <!-- Table for Wikies -->
-        <div>
-            Number of Wikies: <?= count($wikies); ?>
-        </div>
+
         <table class="table">
             <a href="?page=Wiki&action=addWikiEntry">Add Wiki</a>
             <thead>
@@ -34,9 +32,11 @@
                     <th scope="col">Date Created</th>
                     <th scope="col">Status</th>
                     <th scope="col">Description</th>
+                    <?php if($_SESSION['roleUser'] == 'admin'):?>   
                     <th scope="col">User ID</th>
+                    <?php endif;?>
                     <th scope="col">Category ID</th>
-                    <th scope="col">Tags</th> <!-- Added Tags column -->
+                    
                     <th scope="col">Actions</th>
                 </tr>
             </thead>
@@ -49,8 +49,11 @@
                         <td><?= $wikie['datecreate'] ?></td>
                         <td><?= $wikie['status'] ?></td>
                         <td><?= $wikie['description'] ?></td>
+                        <?php if($_SESSION['roleUser'] == 'admin'):?>   
                         <td><?= $wikie['user_id'] ?></td>
+                        <?php endif;?> 
                         <td><?= $wikie['category_id'] ?></td>
+                        
                         <td>
                             <?php
                             // Fetch and display tags for the current wiki entry
@@ -59,6 +62,7 @@
                             ?>
                         </td>
                         <td>
+                        <?php if($_SESSION['roleUser'] == 'admin'):?>    
                         <form method="post" action="?page=Wiki&action=updateWikiStatus&id=<?= $wikie['id'] ?>">
                             <select name="newStatus" class="form-select" aria-label="Default select example">
                                 <option value="0" <?= $wikie['status'] == 0 ? 'selected' : '' ?>>En attente</option>
@@ -66,6 +70,7 @@
                             </select>
                             <button type="submit" class="btn btn-primary">Accepter</button>
                         </form>
+                        <?php endif;?>    
                             <a href="?page=Wiki&action=updateWikiEntry&id=<?= $wikie['id'] ?>">Edit</a>
                             <a href="?page=Wiki&action=deleteWikiEntry&id=<?= $wikie['id'] ?>">Delete</a>
                         </td>
