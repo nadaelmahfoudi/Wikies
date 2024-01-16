@@ -91,7 +91,7 @@ class WikiModel extends Model
         $stmt = $this->pdo->prepare($query);
         $params = array(':newStatus' => $newStatus, ':wikiId' => $wikiId);
     
-        $stmt->execute($params);
+        return $stmt->execute($params);
     }
 
     private function insertWikiEntry($title, $content, $dateCreate, $status, $description, $userId, $categoryId)
@@ -132,22 +132,22 @@ class WikiModel extends Model
 }
 
 
-    public function updateWikiEntry($wikiId, $title, $content, $dateCreate, $status, $description, $user_id, $categoryId)
-    {
-        $data = array(
-            'title' => $title,
-            'content' => $content,
-            'datecreate' => $dateCreate,
-            'status' => $status,
-            'description' => $description,
-            'user_id' => $userId,
-            'category_id' => $categoryId
-        );
+    // public function updateWikiEntry($wikiId, $title, $content, $dateCreate, $status, $description, $user_id, $categoryId)
+    // {
+    //     $data = array(
+    //         'title' => $title,
+    //         'content' => $content,
+    //         'datecreate' => $dateCreate,
+    //         'status' => $status,
+    //         'description' => $description,
+    //         'user_id' => $userId,
+    //         'category_id' => $categoryId
+    //     );
 
-        $where = 'id = ' . $wikiId;
+    //     $where = 'id = ' . $wikiId;
 
-        return $this->updateRecord('wiki', $data, $where);
-    }
+    //     return $this->updateRecord('wiki', $data, $where);
+    // }
 
     public function deleteWikiEntry($wikiId)
     {
@@ -246,7 +246,12 @@ public function getWikiesByUserId($userId)
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-
+public function updateWiki($wikiId, $title, $content, $dateCreate, $description, $categoryId)
+{
+    $dateCreate = str_replace("T", ' ',  $dateCreate) . ":00";
+    $data = array('title' => $title , 'content' => $content , 'datecreate' => $dateCreate , 'description' => $description , 'category_id' => $categoryId);    
+    return $this->updateRecord('wiki', $data, $wikiId);
+}
 
 
 

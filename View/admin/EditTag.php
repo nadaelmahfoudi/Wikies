@@ -20,11 +20,11 @@
 
             <form method="POST">
                 <div class="mb-3">
-                    <label for="category_name" class="form-label">Category Name</label>
-                    <input type="text" class="form-control" id="category_name" name="category_name" value="<?= $categoryName ?>" required>
-                    <input type="hidden" name="categoryId" value="<?= $categoryId ?>">
+                    <label for="tag_name" class="form-label">Tag Name</label>
+                    <input type="text" class="form-control" id="tag_name" name="tag_name" value="<?= $tagId ?>" required>
+                    <input type="hidden" name="tagId" value="<?= $tagId ?>">
                 </div>
-                <button type="submit" value="submit" class="btn btn-primary">Update Category</button>
+                <button type="submit" value="submit" class="btn btn-primary">Update Tag</button>
             </form>
         </main>
         <!-- End Edit Category Form -->

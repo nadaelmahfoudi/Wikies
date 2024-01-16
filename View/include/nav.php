@@ -19,7 +19,7 @@
                                 <a class="nav-link click-scroll" href="index.php">Home</a>
                             </li>
                             <?php 
-                            session_start();
+                            if (session_status() == PHP_SESSION_NONE)session_start();
                             if (isset($_SESSION['roleUser']) && $_SESSION['roleUser'] == 'admin'):
                             ?>
                             <li class="nav-item">

@@ -115,12 +115,11 @@ class Model
                 $i++;
             }
             $stmt->bindParam($i, $id);
-            
 
             // Execute the prepared statement
-            $stmt->execute();
-            return true;
+            return $stmt->execute();
         } catch (PDOException $e) {
+            echo $e->getMessage();
             return false;
         }
     }

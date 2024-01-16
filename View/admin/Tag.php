@@ -39,6 +39,7 @@
                     <td><?= $tag['tag_name'] ?></td>
                     <td>
                         <a href="?page=Tag&action=deleteTag&id=<?= $tag['id'] ?>">Delete</a>
+                        <a href="?page=Tag&action=updateTag&id=<?= $tag['id'] ?>">Edit</a>
                     </td>
                 </tr>
             <?php endforeach; ?>

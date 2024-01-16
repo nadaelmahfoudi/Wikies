@@ -51,9 +51,9 @@ class UserModel extends Model
     {
         return $this->role;
     }
-    public static function emailExist($email)
+    public function emailExist($email)
     {
-        return self::selectRecords('user', '*', 'email = ' . $email);
+        return $this->selectRecords('user', '*', 'email = ' . $email);
     }
 
     public function registerUser()

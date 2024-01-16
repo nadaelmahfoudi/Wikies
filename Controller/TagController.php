@@ -31,14 +31,7 @@ class TagController
             $tagId = $_GET['id'];
 
             $tagModel = new TagModel();
-            $tags = $tagModel->selectRecords('tags', ' id = ' . $tagId);
 
-            if (empty($tags)) {
-                echo 'Tag not found';
-                exit;
-            }
-
-            $tag = $tags[0];
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $tagName = $_POST['tag_name'];
@@ -60,11 +53,10 @@ class TagController
 
     public function deleteTag($tagId)
     {
-        if (isset($_GET['id'])) {
-            $tagId = $_GET['id'];
+        
             $tagModel = new TagModel();
             $result = $tagModel->deleteTag($tagId);
-
+        
             if ($result) {
                 header('Location: /?page=Tag');
                 exit;
@@ -72,9 +64,6 @@ class TagController
                 echo 'Error deleting tag';
                 exit;
             }
-        } else {
-            echo 'Tag ID not provided';
-            exit;
-        }
+      
     }
 }

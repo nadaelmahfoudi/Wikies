@@ -32,7 +32,7 @@
                     <th scope="col">Date Created</th>
                     <th scope="col">Status</th>
                     <th scope="col">Description</th>
-                    <?php if($_SESSION['roleUser'] == 'admin'):?>   
+                    <?php if($_SESSION['role'] == 'admin'):?>   
                     <th scope="col">User ID</th>
                     <?php endif;?>
                     <th scope="col">Category ID</th>
@@ -49,7 +49,7 @@
                         <td><?= $wikie['datecreate'] ?></td>
                         <td><?= $wikie['status'] ?></td>
                         <td><?= $wikie['description'] ?></td>
-                        <?php if($_SESSION['roleUser'] == 'admin'):?>   
+                        <?php if($_SESSION['role'] == 'admin'):?>   
                         <td><?= $wikie['user_id'] ?></td>
                         <?php endif;?> 
                         <td><?= $wikie['category_id'] ?></td>
@@ -62,7 +62,7 @@
                             ?>
                         </td>
                         <td>
-                        <?php if($_SESSION['roleUser'] == 'admin'):?>    
+                        <?php if($_SESSION['role'] == 'admin'):?>    
                         <form method="post" action="?page=Wiki&action=updateWikiStatus&id=<?= $wikie['id'] ?>">
                             <select name="newStatus" class="form-select" aria-label="Default select example">
                                 <option value="0" <?= $wikie['status'] == 0 ? 'selected' : '' ?>>En attente</option>
@@ -71,7 +71,7 @@
                             <button type="submit" class="btn btn-primary">Accepter</button>
                         </form>
                         <?php endif;?>    
-                            <a href="?page=Wiki&action=updateWikiEntry&id=<?= $wikie['id'] ?>">Edit</a>
+                            <a href="?page=Wiki&action=updateWiki&id=<?= $wikie['id'] ?>">Edit</a>
                             <a href="?page=Wiki&action=deleteWikiEntry&id=<?= $wikie['id'] ?>">Delete</a>
                         </td>
                     </tr>

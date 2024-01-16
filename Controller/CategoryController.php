@@ -34,14 +34,10 @@ class CategoryController
             $categoryId = $_GET['id'];
         
             $categoryModel = new CategorieModel();
-            $categories = $categoryModel->selectRecords('categorie', ' id = ' . $categoryId);
+            $categories = $categoryModel->updateCategory('categorie', ' id = ' . $categoryId);
         
-            if (empty($categories)) {
-                echo 'Category not found';
-                exit;
-            }
+
         
-            $category = $categories[0];
         
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $categoryName = $_POST['category_name'];

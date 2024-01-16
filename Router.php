@@ -23,6 +23,9 @@ class Router {
              case 'Statistic':
                 $this->handleStatistiques();
                  break;
+                 case 'Logout':
+                    $this->logout();
+                     break;
             default:
                 $this->handleHome();
 
@@ -160,6 +163,24 @@ class Router {
                         header("Location: ?page=Wiki&action=getAllWikiEntries");
                         break;
 
+                case 'updateWiki':
+                    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                        $wikiId = isset($_POST['id']) ? $_POST['id'] : '';
+                        $title = isset($_POST['title']) ? $_POST['title'] : '';
+                        $content = isset($_POST['content']) ? $_POST['content'] : '';
+                        $dateCreate = isset($_POST['datecreate']) ? $_POST['datecreate'] : '';
+                        $description = isset($_POST['description']) ? $_POST['description'] : '';
+                        $categoryId = isset($_POST['category_id']) ? $_POST['category_id'] : '';
+                        $wikiController->updateWiki($wikiId, $title, $content, $dateCreate, $description, $categoryId);
+                    }else{
+                        $wikiId = isset($_GET['id']) ? $_GET['id'] : '';
+                    
+                    
+$categories = $categoryController->getAllCategories();
+$tags = $tagController->getAllTags();
+        include 'View/EditWiki.php';
+        break;
+    }
                 default:
                 $wikiController->getAcceptedWikies();
         }
@@ -191,10 +212,10 @@ class Router {
                 $tagController->updateTag($tagId, $tagName);  
                 include 'View/admin/EditTag.php';  
                 break;
-            case 'deleteTag':
-                $tagId = isset($_GET['id']) ? $_GET['id'] : '';  
-                $tagController->deleteTag($tagId);  
-                break;
+                case 'deleteTag':
+                    $tagId = isset($_GET['id']) ? $_GET['id'] : '';
+                    $tagController->deleteTag($tagId);
+                    break;
 
             default:
                 $tagController->getAllTags();  
@@ -237,6 +258,11 @@ class Router {
         $usersCount = count($userController->getAllUsers());
 
         include 'View/Statistic.php'; 
+    }
+
+    public function logout(){
+        session_destroy();
+        header("Location: index.php");
     }
 
     
