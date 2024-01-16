@@ -1,4 +1,8 @@
 
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,77 +13,40 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<?php require_once 'include/nav.php'?>
+<?php require_once 'View/include/nav.php'?>
 
+  <div class="container-fluid">
+    <div class="col">
+      <!-- Sidebar -->
+      <?php require_once 'View/include/side_bare.php'?>
+      <!-- End Sidebar -->
+
+
+
+
+
+    </div>
+  </div>
   <div class="container-fluid">
     <div class="row">
       <!-- Sidebar -->
-      <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar " >
-        <div class="position-sticky">
-          <ul class="nav flex-column">
-            <li class="nav-item">
-              <a class="nav-link active" href="Statistic.php">
-                Statistiques
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="Wiki.php">
-                Wikies
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="admin/Categorie.php">
-                Categories
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="admin/Tag.php">
-                Tags
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
+      <?php require_once 'View/include/side_bare.php'?>
       <!-- End Sidebar -->
   
-      <!-- Main content -->
-      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+<!-- Main content -->
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
         <h2>Main Content</h2>
-  
-        <!-- Table -->
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">First</th>
-              <th scope="col">Last</th>
-              <th scope="col">Handle</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>Thornton</td>
-              <td>@fat</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td colspan="2">Larry the Bird</td>
-              <td>@twitter</td>
-            </tr>
-          </tbody>
-        </table>
-        <!-- End Table -->
-  
-      </main>
-      <!-- End Main content -->
+        <div class="statistics-container" style="background-color: #f8f9fa; padding: 10px; ">
+          <p style="font-size: 18px; color: #333;">Statistics:</p>
+          <p style="font-size: 16px; color: #555;">Number of Users: <?= $usersCount; ?></p>
+          <p style="font-size: 16px; color: #555;">Number of Wikies: <?= $wikiesCount; ?></p>
+          <p style="font-size: 16px; color: #555;">Number of Categories: <?= $categoriesCount; ?></p>
+        </div>
+
+</main>
+<!-- End Main content -->
+
+
     </div>
   </div>
   

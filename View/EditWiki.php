@@ -26,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dateCreate = date('Y-m-d H:i:s');
     $status = $_POST['status'];
     $description = $_POST['description'];
-    $user_id = $_POST['user_id'];
     $categoryId = isset($_POST['category_id']) ? (int)$_POST['category_id'] : null;
 
     // Update the Wiki entry
@@ -40,7 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -80,28 +78,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </select>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="datecreate" class="form-label">Datecreate</label>
-                        <input type="text" class="form-control" id="datecreate" name="datecreate" value="<?= $wikiEntry['datecreate'] ?>" required>
+                    <div class="row">
+                        <?php $count = 0; ?>
+                        <?php foreach ($tags as $tag) : ?>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="<?= $tag['id'] ?>" name="tags[]" id="flexCheckDefault<?= $count ?>" <?= in_array($tag['id'], $selectedTags) ? 'checked' : '' ?>>
+                                    <label class="form-check-label" for="flexCheckDefault<?= $count ?>">
+                                        <?= $tag['tag_name'] ?>
+                                    </label>
+                                </div>
+                            </div>
+                            <?php if (++$count % 2 == 0) : ?>
+                                </div>
+                                <?php if ($count < count($tags)) : ?>
+                                    <div class="row">
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
                     </div>
 
                     <div class="mb-3">
-                        <label for="status" class="form-label">status</label>
+                        <label for="dateCreate" class="form-label">Date Created</label>
+                        <input type="datetime-local" class="form-control" id="dateCreate" name="datecreate" value="<?= date('Y-m-d\TH:i', strtotime($wikiEntry['datecreate'])) ?>" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status</label>
                         <input type="text" class="form-control" id="status" name="status" value="<?= $wikiEntry['status'] ?>" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="description" class="form-label">description</label>
+                        <label for="description" class="form-label">Description</label>
                         <input type="text" class="form-control" id="description" name="description" value="<?= $wikiEntry['description'] ?>" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="user_id" class="form-label">user_id</label>
+                        <label for="user_id" class="form-label">User ID</label>
                         <input type="text" class="form-control" id="user_id" name="user_id" value="<?= $wikiEntry['user_id'] ?>" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="category_id" class="form-label">category_id</label>
+                        <label for="category_id" class="form-label">Category ID</label>
                         <input type="text" class="form-control" id="category_id" name="category_id" value="<?= $wikiEntry['category_id'] ?>" required>
                     </div>
 

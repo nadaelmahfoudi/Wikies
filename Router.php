@@ -1,5 +1,6 @@
 <?php
 require_once 'autoload.php';
+require_once 'Controller/UserController.php';
 
 
 class Router {
@@ -24,6 +25,9 @@ class Router {
                 $this->handleWikies($input);
 
                   break;
+             case 'Statistic':
+                $this->handleStatistiques();
+                 break;
             default:
                 $this->handleHome();
 
@@ -205,6 +209,33 @@ class Router {
     
          $wikiController->searchWikiByTitle($keyword);
     }
+    // Add the following method in your Router class
+    private function handleStatistiques() {
+        require_once 'Model/WikiModel.php';
+        require_once 'Controller/WikiController.php';
+        require_once 'Model/CategorieModel.php';
+        require_once 'Controller/CategoryController.php';
+        require_once 'Model/UserModel.php';
+        require_once 'Controller/UserController.php';
+
+        // Initialize controllers and models
+        $wikiModel = new WikiModel();
+        $wikiController = new WikiController($wikiModel);
+
+        $categoryModel = new CategorieModel();
+        $categoryController = new CategoryController($categoryModel);
+
+        $userModel = new UserModel();
+        $userController = new UserController($userModel);
+
+        // Fetch data to count
+        $categoriesCount = count($categoryController->getAllCategories());
+        $wikiesCount = count($wikiController->getAllWikiEntries());
+        $usersCount = count($userController->getAllUsers());
+
+        include 'View/Statistic.php'; 
+    }
+
     
     
 }

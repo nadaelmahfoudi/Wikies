@@ -1,7 +1,7 @@
 <?php
-include 'CategoryController.php';
+require_once 'CategoryController.php';
 require_once 'Controller/TagController.php';
-include 'Model/TagModel.php';
+require_once 'Model/TagModel.php';
 
 class WikiController
 {
@@ -156,6 +156,17 @@ class WikiController
 
         require_once 'EditWiki.php';
     }
+
+    public function getUserWikies()
+    {
+        $loggedInUserId = $_SESSION['idUser']; 
+        $userModel = new UserModel();
+        $wikie = new WikiModel();
+        $wikies = $userModel->getWikiesByUserId($loggedInUserId);
+    
+        return $wikies;
+    }
+
 
 
 

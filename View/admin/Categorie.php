@@ -14,32 +14,7 @@
   <div class="container-fluid">
     <div class="row">
       <!-- Sidebar -->
-      <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar " >
-        <div class="position-sticky">
-          <ul class="nav flex-column">
-            <li class="nav-item">
-              <a class="nav-link active" href="#">
-                Statistiques
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                Wikies
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                Categories
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                Tags
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
+      <?php require_once 'View/include/side_bare.php'?>
       <!-- End Sidebar -->
   
 <!-- Main content -->

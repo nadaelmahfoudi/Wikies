@@ -13,32 +13,7 @@
 <div class="container-fluid">
     <div class="row">
         <!-- Sidebar -->
-        <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
-            <div class="position-sticky">
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">
-                            Statistiques
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Wikies
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Categories
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Tags
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+        <?php require_once 'include/side_bare.php'?>
         <!-- End Sidebar -->
 
         <!-- Main content -->
@@ -46,6 +21,9 @@
             <h2>Wiki Entries</h2>
 
         <!-- Table for Wikies -->
+        <div>
+            Number of Wikies: <?= count($wikies); ?>
+        </div>
         <table class="table">
             <a href="?page=Wiki&action=addWikiEntry">Add Wiki</a>
             <thead>
@@ -88,7 +66,7 @@
                             </select>
                             <button type="submit" class="btn btn-primary">Accepter</button>
                         </form>
-                            <a href="?page=Categorie&action=updateCategory&id=<?= $wikie['id'] ?>">Edit</a>
+                            <a href="?page=Wiki&action=updateWikiEntry&id=<?= $wikie['id'] ?>">Edit</a>
                             <a href="?page=Wiki&action=deleteWikiEntry&id=<?= $wikie['id'] ?>">Delete</a>
                         </td>
                     </tr>

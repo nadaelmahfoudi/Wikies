@@ -1,6 +1,6 @@
 <?php
 
-
+require_once 'Model.php';
 
 class UserModel extends Model
 {
@@ -79,6 +79,16 @@ class UserModel extends Model
     {
         return $this->selectRecords('user', '*', 'email = ' .'"'.$email.'"');
     }
+
+    public function getWikiesByUserId($userId)
+{
+    return $this->selectRecords('wiki', '*', 'user_id = ' . $userId);
+}
+
+public function fetchAllUsers() {
+    $stmt = $this->pdo->query('SELECT * FROM user');
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
     
 }

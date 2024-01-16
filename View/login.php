@@ -1,4 +1,5 @@
 <?php 
+include '../Controller/AuthController.php';
 require_once '../autoload.php';
  if ($_SERVER['REQUEST_METHOD'] == 'POST'){
   $controller = new AuthController;

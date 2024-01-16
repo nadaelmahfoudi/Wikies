@@ -1,5 +1,7 @@
 <?php 
 session_start();
+include 'Controller.php';
+include '../Model/UserModel.php';
 
 class AuthController extends Controller
 {

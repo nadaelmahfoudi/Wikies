@@ -4,6 +4,7 @@ $wikiModel = new WikiModel();
 
 $wikiId = isset($_GET['id']) ? $_GET['id'] : '';
 
+
 $wikiDetails = $wikiModel->singlePageDetail($wikiId);
 ?>
 <!DOCTYPE html>
@@ -30,7 +31,6 @@ $wikiDetails = $wikiModel->singlePageDetail($wikiId);
                 <h2><?php echo htmlspecialchars($wikiDetails['title']); ?></h2>
             </div>
             <div class="card-body">
-                <h5 class="card-title">Author: <?php echo htmlspecialchars($wikiDetails['author']); ?></h5>
                 <p class="card-text"><?php echo nl2br(htmlspecialchars($wikiDetails['content'])); ?></p>
                 <p>Date Created: <?php echo htmlspecialchars($wikiDetails['datecreate']); ?></p>
                 <p>Description: <?php echo htmlspecialchars($wikiDetails['description']); ?></p>

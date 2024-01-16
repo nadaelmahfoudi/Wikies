@@ -33,7 +33,7 @@ require_once '../autoload.php';
                     <h4 class="mt-1 mb-5 pb-1">We are The WIKI plateforme</h4>
                   </div>
   
-                  <form  method="POST" action="">
+                  <form  method="POST" action=""  onsubmit="return validateForm()">
                     <p>Sign up for free</p>
   
                     <div class="form-outline mb-4">
@@ -214,5 +214,40 @@ require_once '../autoload.php';
   type="text/javascript"
   src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.1.0/mdb.umd.min.js"
 ></script>
+<script>
+    function validateForm() {
+        var username = document.getElementById('username').value;
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('password').value;
+
+        // Reset error messages
+        document.getElementById('usernameError').innerHTML = '';
+        document.getElementById('emailError').innerHTML = '';
+        document.getElementById('passwordError').innerHTML = '';
+
+        var isValid = true;
+
+        // Validate username (only letters)
+        if (!/^[a-zA-Z]+$/.test(username)) {
+            document.getElementById('usernameError').innerHTML = 'Please enter a valid username with only letters.';
+            isValid = false;
+        }
+
+        // Validate email format
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            document.getElementById('emailError').innerHTML = 'Please enter a valid email address.';
+            isValid = false;
+        }
+
+        // Validate password
+        if (password.trim() === '') {
+            document.getElementById('passwordError').innerHTML = 'Please enter a password.';
+            isValid = false;
+        }
+
+        return isValid;
+    }
+</script>
 </body>
 </html>

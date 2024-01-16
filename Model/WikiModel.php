@@ -32,9 +32,10 @@ class WikiModel extends Model
             if (is_array($tags)) {
                 $tags = implode(',', $tags);
             }
+            $userId = $_SESSION['idUser'];
+
+            $result = $this->addWikiEntry($title, $content, $dateCreate, $status, $description, $userId, $categoryId, $tagsArray);
     
-            // Insert wiki entry
-            $result = $this->insertWikiEntry($title, $content, $dateCreate, $status, $description, $userId, $categoryId);
     
             if (!$result) {
                 echo 'Error adding wiki entry.';
@@ -224,6 +225,15 @@ public function singlePageDetail($wikiId)
         error_log("Database Error: " . $e->getMessage());
         return null;
     }
+}
+
+public function getWikiesByUserId($userId) 
+{
+    $sql = "SELECT * FROM wiki WHERE user_id = :userId";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 

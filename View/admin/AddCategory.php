@@ -44,7 +44,7 @@
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <h2>Add Category</h2>
 
-                <form method="post" action="?page=Categorie&action=addCategory">
+                <form method="post" action="?page=Categorie&action=addCategory" onsubmit="return validateForm()">
                     <div class="mb-3">
                         <label for="category_name" class="form-label">Category Name</label>
                         <input type="text" class="form-control" id="category_name" name="category_name" required>
@@ -178,5 +178,32 @@
 <!-- Footer -->
         </div>
     </div>
+
+    <script>
+    function validateForm() {
+        var categoryName = document.getElementById('category_name').value;
+
+        // Reset error message
+        document.getElementById('categoryNameError').innerHTML = '';
+
+        // Validate category name
+        if (categoryName.trim() === '') {
+            document.getElementById('categoryNameError').innerHTML = 'Please enter a category name.';
+            return false;
+        }
+
+        // Regular expression to allow only letters
+        var lettersOnlyRegex = /^[a-zA-Z]+$/;
+
+        // Check if the category name contains only letters
+        if (!lettersOnlyRegex.test(categoryName)) {
+            document.getElementById('categoryNameError').innerHTML = 'Please enter a valid category name with only letters.';
+            return false;
+        }
+
+        return true;
+    }
+</script>
+
 </body>
 </html>
