@@ -101,8 +101,7 @@ class Router {
         
         $tagModel = new TagModel();
         $tagController = new TagController($tagModel);
-        $tags = $tagController->getAllTags();  
-        
+        $tags = $tagController->getAllTags();
         $action = isset($_GET['action']) ? $_GET['action'] : 'getAllWikiEntries';
         $wikies = [];
         
@@ -121,7 +120,7 @@ class Router {
                 break;
                 case 'myWiki':
                     $wikiModel = new WikiModel();  
-                    $wikiController = new wikiController($wikiModel);  
+                    $wikiController = new wikiController($wikiModel);
                     $wikies = $wikiController->getAuthorWiki($_SESSION['idUser']); 
                     include 'View/Wiki.php';
                     break;
@@ -137,12 +136,11 @@ class Router {
                 $title = isset($_POST['title']) ? $_POST['title'] : '';
                 $content = isset($_POST['content']) ? $_POST['content'] : '';
                 $dateCreate = isset($_POST['datecreate']) ? $_POST['datecreate'] : '';
-                $status = isset($_POST['status']) ? $_POST['status'] : '';
                 $description = isset($_POST['description']) ? $_POST['description'] : '';
                 $categoryId = isset($_POST['category_id']) ? $_POST['category_id'] : '';
                 $categories = $categoryController->getAllCategories();
                 $tags = $tagController->getAllTags();
-                $wikiController->addWikiEntry($title, $content, $dateCreate, $status, $description, $categoryId);
+                $wikiController->addWikiEntry($title, $content, $dateCreate, $description, $categoryId);
                 // Pass $categories to the method
                 include 'View/AddWiki.php';
                 break;

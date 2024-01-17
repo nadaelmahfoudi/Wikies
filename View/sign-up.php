@@ -1,5 +1,6 @@
 <?php 
 require_once '../autoload.php';
+require_once '../Controller/AuthController.php';
  if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['submit'] == 'submit'){
   $controller = new AuthController;
   $controller->registration();

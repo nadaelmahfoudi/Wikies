@@ -15,28 +15,9 @@ class WikiModel extends Model
         return $this->selectRecords('wiki','*','status = 1');
     }
 
-    public function addWikiEntry($title, $content, $dateCreate, $status, $description, $userId, $categoryId, $tags)
+    public function addWikiEntry($title, $content, $dateCreate, $description, $user_id, $category_id, $tags)
     {
         // Process the form data only when the request method is POST
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $title = $_POST['title'];
-            $content = $_POST['content'];
-            $dateCreate = date('Y-m-d H:i:s');
-            $description = $_POST['description'];
-    
-            $category_id = isset($_POST['category_id']) ? (int)$_POST['category_id'] : null;
-            if ($category_id === null) {
-                echo 'Error: Category is required.';
-                exit;
-            }
-    
-            // Ensure $tags is a string
-            if (is_array($tags)) {
-                $tags = implode(',', $tags);
-            }
-            $user_id = $_SESSION['idUser'] ?? 2;
-
-
             $result = $this->insertRecord('wiki',compact('title','content','dateCreate','description','user_id','category_id'));
     
     
@@ -49,35 +30,13 @@ class WikiModel extends Model
             $lastInsertId = $this->pdo->lastInsertId();
     
             // Insert tags
-            if (!empty($tags)) {
-                $tagModel = new TagModel();
-                $tagNames = explode(',', $tags);
-    
-                foreach ($tagNames as $tagName) {
-                    $tagName = trim($tagName);
-    
-                    // Check if the tag already exists
-                    $existingTag = $tagModel->getTagByName($tagName);
-    
-                    if (!$existingTag) {
-                        // If the tag doesn't exist, add it
-                        $tagModel->addTag($tagName);
-    
-                        // Get the ID of the newly inserted tag
-                        $tagId = $this->pdo->lastInsertId();
-                    } else {
-                        // If the tag already exists, use its ID
-                        $tagId = $existingTag['id'];
-                    }
-    
+            if (count($tags)>0) {
+                foreach ($tags as $tag_id) {
                     // Associate the tag with the wiki entry
-                    $this->addWikiTag($lastInsertId, $tagId);
+                    $this->addWikiTag($lastInsertId, $tag_id);
                 }
             }
-    
-            header('Location: /?page=Wiki');
-            exit;
-        }
+            return $result;      
     }
     
     public function updateWikiStatus($wikiId, $newStatus) {

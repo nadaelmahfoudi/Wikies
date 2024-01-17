@@ -23,7 +23,12 @@
         <!-- Table for Wikies -->
 
         <table class="table">
-            <a href="?page=Wiki&action=addWikiEntry">Add Wiki</a>
+                <?php 
+                    if (session_status() == PHP_SESSION_NONE)session_start();
+                    if (isset($_SESSION['roleUser']) && $_SESSION['roleUser'] == 'auteur'):
+                ?> 
+                    <a href="?page=Wiki&action=addWikiEntry">Add Wiki</a>
+            <?php endif; ?> 
             <thead>
                 <tr>
                     <th scope="col">#</th>
@@ -62,7 +67,10 @@
                             ?>
                         </td>
                         <td>
-                        <?php if($_SESSION['role'] == 'admin'):?>    
+                        <?php 
+                    if (session_status() == PHP_SESSION_NONE)session_start();
+                    if (isset($_SESSION['roleUser']) && $_SESSION['roleUser'] == 'admin'):
+                         ?>  
                         <form method="post" action="?page=Wiki&action=updateWikiStatus&id=<?= $wikie['id'] ?>">
                             <select name="newStatus" class="form-select" aria-label="Default select example">
                                 <option value="0" <?= $wikie['status'] == 0 ? 'selected' : '' ?>>En attente</option>
@@ -70,7 +78,7 @@
                             </select>
                             <button type="submit" class="btn btn-primary">Accepter</button>
                         </form>
-                        <?php endif;?>    
+                        <?php endif; ?>    
                             <a href="?page=Wiki&action=updateWiki&id=<?= $wikie['id'] ?>">Edit</a>
                             <a href="?page=Wiki&action=deleteWikiEntry&id=<?= $wikie['id'] ?>">Delete</a>
                         </td>

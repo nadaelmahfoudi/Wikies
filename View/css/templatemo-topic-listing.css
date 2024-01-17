@@ -538,16 +538,14 @@ strong {
 .custom-block {
   border-radius: var(--border-radius-medium);
   position: relative;
+  z-index: 1;
   overflow: hidden;
   padding: 30px;
   transition: all 0.3s ease;
   height: 100%;
 }
 
-.custom-block:hover {
-  background-color: var(--secondary-color);
-  transform: translateY(-3px);
-}
+
 
 .custom-block > a {
   width: 100%;

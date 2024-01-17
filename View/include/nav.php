@@ -1,3 +1,4 @@
+<?php if (session_status() == PHP_SESSION_NONE)session_start(); ?>
 <nav class="navbar navbar-expand-lg" style="background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);">
                 <div class="container">
                     <a class="navbar-brand" href="index.html">
@@ -18,15 +19,17 @@
                             <li class="nav-item">
                                 <a class="nav-link click-scroll" href="index.php">Home</a>
                             </li>
-                            <?php 
-                            if (session_status() == PHP_SESSION_NONE)session_start();
-                            if (isset($_SESSION['roleUser']) && $_SESSION['roleUser'] == 'admin'):
-                            ?>
-                            <li class="nav-item">
-                                <a class="nav-link click-scroll" href="../?page=Wiki.php">Dashboard</a>
-                            </li>
 
-                            <?php endif;?>
+                            <li class="nav-item">
+                                <?php if (isset($_SESSION['roleUser']) && $_SESSION['roleUser'] == 'admin'):?>
+                                <a class="nav-link" href="/index.php?page=Wiki">Dashboard</a>
+                                <?php elseif (isset($_SESSION['roleUser']) && $_SESSION['roleUser'] == 'auteur') :?>
+                                <a class="nav-link" href="/index.php?page=Wiki&action=myWiki">Dashboard</a>
+                                <?php else :?>
+                                <a class="nav-link" href="/index.php">Dashboard</a>
+                                <?php endif;?>
+                            </li>
+                            
                             <li class="nav-item">
                                 <a class="nav-link click-scroll" href="#section_10">FAQs</a>
                             </li>
@@ -43,6 +46,7 @@
                             </li>
                         </ul>
                         <?php
+                        
                             if (!isset($_SESSION['nameUser'])):
                         ?>
                         <div class="d-flex align-items-center">
@@ -55,7 +59,7 @@
                           </div>
                         <?php else: ?>
                         <p class="dark:text-white" >Welcome ! <?php echo $_SESSION['nameUser']; ?></p>
-                        <a href="logout.php" data-mdb-ripple-init type="button" class="btn btn-link px-3 me-2">
+                        <a href="/View/logout.php" data-mdb-ripple-init type="button" class="btn btn-link px-3 me-2">
                                 <span>
                                     Log out 
                                 </span>

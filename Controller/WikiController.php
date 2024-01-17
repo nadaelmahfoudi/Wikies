@@ -28,14 +28,13 @@ class WikiController
         return $wikies;
     }
 
-    public function addWikiEntry($title, $content, $dateCreate, $status, $description, $categoryId)
+    public function addWikiEntry($title, $content, $dateCreate, $description, $categoryId)
     {
         // Process the form data only when the request method is POST
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $title = $_POST['title'];
             $content = $_POST['content'];
             $dateCreate = date('Y-m-d H:i:s');
-            $status = $_POST['status'];
             $description = $_POST['description'];
     
             $categoryId = isset($_POST['category_id']) ? (int)$_POST['category_id'] : null;
@@ -47,33 +46,16 @@ class WikiController
             // Handle tags
             $tagsInput = isset($_POST['tags']) ? $_POST['tags'] : '';
             if (!is_array($tagsInput)) {
-                $tagsArray = explode(',', $tagsInput);
-            } else {
-                $tagsArray = $tagsInput;
+                $tagsInput = explode(',', $tagsInput);
             }
     
-            //Add tags if not already added
-            $tagModel = new TagModel();
-            foreach ($tagsArray as $tagName) {
-                $tagName = trim($tagName);
-                if (!empty($tagName)) {
-                    // Check if the tag already exists
-                    $existingTag = $tagModel->findTagByName($tagName);
-    
-                    if (!$existingTag) {
-                        // Tag doesn't exist, add it
-                        $tagModel->addTag($tagName);
-                    }
-                }
-            }
-    
-            $userId = 2;
+            $userId = $_SESSION['idUser'];
             $wikiModel = new WikiModel();
-            $result = $wikiModel->addWikiEntry($title, $content, $dateCreate, $status, $description, $userId, $categoryId, $tagsArray);
+            $result = $wikiModel->addWikiEntry($title, $content, $dateCreate, $description, $userId, $categoryId, $tagsInput);
 
     
             if ($result) {
-                header('Location: /?page=Wiki');
+                header('Location: index.php');
                 exit;
             } else {
                 echo 'Error adding wiki entry.';

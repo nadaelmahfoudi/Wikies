@@ -45,7 +45,7 @@
     <?php foreach ($tags as $tag) : ?>
         <div class="col-md-6">
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="<?= $tag['id'] ?>" name="tags[]"id="flexCheckDefault<?= $count ?>">
+                <input class="form-check-input" type="checkbox" value="<?= $tag['id'] ?>" name="tags[]" id="flexCheckDefault<?= $count ?>">
                 <label class="form-check-label" for="flexCheckDefault<?= $count ?>">
                     <?= $tag['tag_name'] ?>
                 </label>
